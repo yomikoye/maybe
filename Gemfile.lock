@@ -102,6 +102,14 @@ GEM
       aws-sigv4 (~> 1.5)
     aws-sigv4 (1.11.0)
       aws-eventstream (~> 1, >= 1.0.2)
+    azure-storage-blob (2.0.3)
+      azure-storage-common (~> 2.0)
+      nokogiri (~> 1, >= 1.10.8)
+    azure-storage-common (2.0.4)
+      faraday (~> 1.0)
+      faraday_middleware (~> 1.0, >= 1.0.0.rc1)
+      net-http-persistent (~> 4.0)
+      nokogiri (~> 1, >= 1.10.8)
     base64 (0.2.0)
     bcrypt (3.1.20)
     benchmark (0.4.0)
@@ -161,16 +169,14 @@ GEM
     event_stream_parser (1.0.0)
     faker (3.5.1)
       i18n (>= 1.8.11, < 2)
-    faraday (2.13.0)
-      faraday-net_http (>= 2.0, < 3.5)
-      json
-      logger
+    faraday (1.2.0)
+      multipart-post (>= 1.2, < 3)
+      ruby2_keywords
     faraday-multipart (1.1.0)
       multipart-post (~> 2.0)
-    faraday-net_http (3.4.0)
-      net-http (>= 0.5.0)
-    faraday-retry (2.3.1)
-      faraday (~> 2.0)
+    faraday-retry (1.0.3)
+    faraday_middleware (1.2.1)
+      faraday (~> 1.0)
     ffi (1.17.1-aarch64-linux-gnu)
     ffi (1.17.1-aarch64-linux-musl)
     ffi (1.17.1-arm-linux-gnu)
@@ -271,8 +277,8 @@ GEM
       ruby2_keywords (>= 0.0.5)
     msgpack (1.8.0)
     multipart-post (2.4.1)
-    net-http (0.6.0)
-      uri
+    net-http-persistent (4.0.5)
+      connection_pool (~> 2.2)
     net-imap (0.5.6)
       date
       net-protocol
@@ -501,7 +507,6 @@ GEM
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
-    uri (1.0.3)
     useragent (0.16.11)
     vcr (6.3.1)
       base64
@@ -537,6 +542,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-import
   aws-sdk-s3 (~> 1.177.0)
+  azure-storage-blob (~> 2.0)
   bcrypt (~> 3.1)
   benchmark-ips
   bootsnap

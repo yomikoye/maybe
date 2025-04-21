@@ -39,6 +39,7 @@ gem "logtail-rails"
 # Active Storage
 gem "aws-sdk-s3", "~> 1.177.0", require: false
 gem "image_processing", ">= 1.2"
+gem "azure-storage-blob", "~> 2.0"
 
 # Other
 gem "bcrypt", "~> 3.1"

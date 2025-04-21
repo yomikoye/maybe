@@ -1,0 +1,94 @@
+# ===========================================================================
+# Example Docker Compose file
+# ===========================================================================
+#
+# Purpose:
+# --------
+#
+# This file is an example Docker Compose configuration for self hosting
+# Maybe on your local machine or on a cloud VPS.
+#
+# The configuration below is a "standard" setup that works out of the box,
+# but if you're running this outside of a local network, it is recommended
+# to set the environment variables for extra security.
+#
+# Setup:
+# ------
+#
+# To run this, you should read the setup guide:
+#
+# https://github.com/maybe-finance/maybe/blob/main/docs/hosting/docker.md
+#
+# Troubleshooting:
+# ----------------
+#
+# If you run into problems, you should open a Discussion here:
+#
+# https://github.com/maybe-finance/maybe/discussions/categories/general
+#
+
+x-rails-env: &rails_env
+  SELF_HOSTED: "true"
+  SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+  SYNTH_API_KEY: ${SECRET_KEY_BASE}
+  PORT: 3333
+  SMTP_ADDRESS: ${SMTP_ADDRESS}
+  SMTP_PORT: ${SMTP_PORT}
+  SMTP_USERNAME: ${SMTP_USERNAME}
+  SMTP_PASSWORD: ${SMTP_PASSWORD}
+  SMTP_TLS_ENABLED: ${SMTP_TLS_ENABLED}
+  EMAIL_SENDER: ${EMAIL_SENDER}
+  POSTGRES_USER: ${POSTGRES_USER}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  POSTGRES_DB: ${POSTGRES_DB}
+  DB_HOST: ${DB_HOST}
+  DB_PORT: 5432
+  REDIS_URL: redis://redis:6379/1
+  APP_DOMAIN: ${APP_DOMAIN}
+  ACTIVE_STORAGE_SERVICE: ${ACTIVE_STORAGE_SERVICE}
+  AZURE_STORAGE_ACCOUNT_NAME: ${AZURE_STORAGE_ACCOUNT_NAME}
+  AZURE_STORAGE_CONTAINER: ${AZURE_STORAGE_CONTAINER}
+  AZURE_STORAGE_ACCESS_KEY: ${AZURE_STORAGE_ACCESS_KEY}
+  RAILS_FORCE_SSL: "false"
+  RAILS_ASSUME_SSL: "false"
+  
+services:
+  web:
+    image: yomikoye/maybe:v1.2
+    volumes:
+      - app-storage:/rails/storage
+    ports:
+      - 3333:3000
+    restart: unless-stopped
+    environment:
+      <<: *rails_env
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  worker:
+    image: yomikoye/maybe:v1.2
+    command: bundle exec sidekiq
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      <<: *rails_env
+
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  app-storage:
+  redis-data:
