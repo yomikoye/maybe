@@ -31,7 +31,6 @@ x-rails-env: &rails_env
   SELF_HOSTED: "true"
   SECRET_KEY_BASE: ${SECRET_KEY_BASE}
   SYNTH_API_KEY: ${SECRET_KEY_BASE}
-  PORT: 3333
   SMTP_ADDRESS: ${SMTP_ADDRESS}
   SMTP_PORT: ${SMTP_PORT}
   SMTP_USERNAME: ${SMTP_USERNAME}
@@ -51,10 +50,11 @@ x-rails-env: &rails_env
   AZURE_STORAGE_ACCESS_KEY: ${AZURE_STORAGE_ACCESS_KEY}
   RAILS_FORCE_SSL: "false"
   RAILS_ASSUME_SSL: "false"
+  OPENAI_ACCESS_TOKEN: ${OPENAI_ACCESS_TOKEN}
   
 services:
   web:
-    image: yomikoye/maybe:v1.2
+    image: yomikoye/maybe:v1.3
     volumes:
       - app-storage:/rails/storage
     ports:
@@ -67,7 +67,7 @@ services:
         condition: service_healthy
 
   worker:
-    image: yomikoye/maybe:v1.2
+    image: yomikoye/maybe:v1.3
     command: bundle exec sidekiq
     restart: unless-stopped
     depends_on:
